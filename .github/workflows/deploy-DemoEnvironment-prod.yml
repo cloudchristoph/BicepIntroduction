@@ -1,7 +1,7 @@
-on: [push, workflow_dispatch]
-name: DemoEnvironment DEV Deployment
+on: [workflow_dispatch]
+name: DemoEnvironment PROD Deployment
 jobs:
-  deploy-dev:
+  deploy-prod:
     runs-on: ubuntu-latest
     steps:
       # Checkout code
@@ -18,12 +18,8 @@ jobs:
       with:
         scope: subscription
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        deploymentName: 'CI-DemoEnvironment-dev'
+        deploymentName: 'CI-DemoEnvironment-prod'
         region: 'germanywestcentral'
         template: ./02_Modules/DemoEnvironment.bicep
-        parameters: ./02_Modules/DemoEnvironment-dev.bicepparam
+        parameters: ./02_Modules/DemoEnvironment-prod.bicepparam
         failOnStdErr: false
-      
-      # Output IPs
-    - run: echo ${{ steps.deploy.outputs.vmDemoHighPerformancePublicIp }}
-    - run: echo ${{ steps.deploy.outputs.vmDemoStandardPublicIp }}
