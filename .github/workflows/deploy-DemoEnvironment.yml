@@ -1,4 +1,4 @@
-on: [push]
+on: [push, workflow_dispatch]
 name: Azure Bicep Deployment
 jobs:
   build-and-deploy:
