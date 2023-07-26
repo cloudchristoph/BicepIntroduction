@@ -1,0 +1,29 @@
+on: [push]
+name: Azure Bicep Deployment
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        scope: subscription
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        deploymentName: 'CI-DemoEnvironment-dev'
+        region: 'germanywestcentral'
+        template: ./02_Modules/DemoEnvironment.bicep
+        parameters: ./02_Modules/DemoEnvironment-dev.bicepparam
+        failOnStdErr: false
+      
+      # Output IPs
+    - run: echo ${{ steps.deploy.outputs.vmDemoHighPerformancePublicIp }}
+    - run: echo ${{ steps.deploy.outputs.vmDemoStandardPublicIp }}
